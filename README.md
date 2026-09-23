@@ -1,6 +1,6 @@
 # Code Ricing
 
-My personal VS Code (Code - OSS) setup: `settings.json`, custom CSS, and a script for the [vscode-custom-css](https://github.com/be5invis/vscode-custom-css) extension. These files are symlinked from `~/.config/Code - OSS/User/` so this repo always reflects the live config.
+My personal VS Code (Code - OSS) setup: `settings.json`, custom CSS, and a script for the [vscode-custom-css](https://github.com/be5invis/vscode-custom-css) extension. The real files live in this repo, and `~/.config/Code - OSS/User/` has symlinks pointing here, so edits in VS Code land in the repo.
 
 ## Contents
 
@@ -10,10 +10,15 @@ My personal VS Code (Code - OSS) setup: `settings.json`, custom CSS, and a scrip
 
 ## Setup
 
-Since the files here are symlinks pointing at `~/.config/Code - OSS/User/`, cloning this repo alone won't apply the config elsewhere. On a new machine, either:
+On a new machine, clone this repo and symlink each file into place:
 
-- Clone this repo, then symlink each file from `~/.config/Code - OSS/User/` back to the cloned copies, or
-- Copy the files directly into `~/.config/Code - OSS/User/`.
+```bash
+for f in settings.json custom-vscode.css vscode-script.js; do
+  ln -sf "$PWD/$f" "$HOME/.config/Code - OSS/User/$f"
+done
+```
+
+`settings.json` includes the generated `workbench.colorCustomizations` block, so it changes whenever the wallpaper does.
 
 ## Wallpaper theme
 
