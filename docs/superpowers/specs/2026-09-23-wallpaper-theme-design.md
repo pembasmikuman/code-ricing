@@ -9,12 +9,12 @@ Works on KDE today; the VS Code side works on any desktop.
 
 - **Colors come from matugen** (already installed, already driving kitty). One palette, so terminal and editor match.
 - **UI colors only.** Syntax colors stay with the active theme so code stays readable on any wallpaper.
-- **Colors are written to `workbench.colorCustomizations` in the user `settings.json`.** VS Code's settings API edits only that key in place (adds it at the end if missing), so the rest of the file is untouched. Accepted cost: `settings.json` is symlinked into this repo, so wallpaper changes show up as git changes.
+- **Colors are written to `workbench.colorCustomizations` in the user `settings.json`.** VS Code's settings API edits only that key in place (adds it at the end if missing), so the rest of the file is untouched. Note: the repo's `settings.json` is a symlink, and git stores only the link path, so these writes do not create git changes.
 - **Only the wallpaper trigger is KDE-specific.** Swapping desktops means swapping one small script.
 
 ## Pieces
 
-### 1. matugen template (lives in `~/.config/matugen/`, copy kept in this repo under `matugen/`)
+### 1. matugen template (real file in this repo under `matugen/`, symlinked from `~/.config/matugen/templates/`)
 
 - `templates/vscode.json`: a JSON object of VS Code color keys to matugen colors, same `{{colors.<name>.default.hex}}` syntax as the kitty template. Covers editor, sidebar, activity bar, tabs, title bar, panel/terminal background, lists, inputs, buttons, borders, focus, scrollbar, widgets. Examples:
   - `editor.background` = `surface`, `editor.foreground` = `on_surface`
@@ -35,11 +35,11 @@ Works on KDE today; the VS Code side works on any desktop.
 - One setting: `wallpaperTheme.colorsFile` (default `~/.cache/matugen/vscode.json`, `~` expanded).
 - Packaged with `bunx @vscode/vsce package`, installed with `code-oss --install-extension`.
 
-### 3. KDE trigger (`kde/` in this repo, installed to `~/.local/bin` and `~/.config/systemd/user/`)
+### 3. KDE trigger (`kde/` in this repo; script symlinked into `~/.local/bin`, units copied to `~/.config/systemd/user/`)
 
 - `wallpaper-sync.path`: systemd path unit, `PathChanged=%h/.config/plasma-org.kde.plasma.desktop-appletsrc`.
 - `wallpaper-sync.service`: oneshot that runs `kde-wallpaper-sync.sh`.
-- `kde-wallpaper-sync.sh`: asks Plasma for screen 0's wallpaper via `qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript`, strips `file://` and decodes `%XX`, then runs `matugen image <path>`. Skips if the path is the same as last run (Plasma rewrites that config file for many reasons, not just wallpaper changes). Last path is kept in `~/.cache/matugen/last-wallpaper`.
+- `kde-wallpaper-sync.sh`: asks Plasma for screen 0's wallpaper via `qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript`, strips `file://` and decodes `%XX`, then runs `matugen image <path> -m dark --prefer saturation` (`--prefer` is required: without a terminal matugen otherwise stops to ask which source color to use). Skips if the path is the same as last run (Plasma rewrites that config file for many reasons, not just wallpaper changes). Last path is kept in `~/.cache/matugen/last-wallpaper`.
 
 ## Flow
 
