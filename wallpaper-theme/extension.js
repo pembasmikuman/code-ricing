@@ -26,7 +26,12 @@ async function apply() {
   const workbench = vscode.workspace.getConfiguration("workbench");
   const current = workbench.inspect("colorCustomizations").globalValue ?? {};
   const merged = mergeColors(current, incoming);
-  if (merged) await workbench.update("colorCustomizations", merged, vscode.ConfigurationTarget.Global);
+  if (!merged) return;
+  try {
+    await workbench.update("colorCustomizations", merged, vscode.ConfigurationTarget.Global);
+  } catch (err) {
+    vscode.window.showWarningMessage(`Wallpaper Theme: could not save colors: ${err.message}`);
+  }
 }
 
 /** Wait for matugen to finish writing before reading; it can fire several events per write. */

@@ -1,5 +1,8 @@
 [Unit]
 Description=Regenerate matugen colors from the KDE wallpaper
+# Plasma rewrites its config in bursts; the script exits early when nothing changed,
+# so never let systemd rate-limit this and silently stop the path unit.
+StartLimitIntervalSec=0
 
 [Service]
 Type=oneshot
