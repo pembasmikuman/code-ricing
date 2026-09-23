@@ -1,0 +1,23 @@
+{
+  "name": "wallpaper-theme",
+  "displayName": "Wallpaper Theme",
+  "description": "Recolors the VS Code UI from a matugen wallpaper palette.",
+  "version": "0.1.0",
+  "publisher": "pembasmikuman",
+  "license": "MIT",
+  "engines": { "vscode": "^1.90.0" },
+  "main": "./extension.js",
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "configuration": {
+      "title": "Wallpaper Theme",
+      "properties": {
+        "wallpaperTheme.colorsFile": {
+          "type": "string",
+          "default": "~/.cache/matugen/vscode.json",
+          "description": "JSON file of VS Code UI colors written by matugen. Watched for changes."
+        }
+      }
+    }
+  }
+}
