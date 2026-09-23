@@ -1,0 +1,6 @@
+[Unit]
+Description=Regenerate matugen colors from the KDE wallpaper
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/kde-wallpaper-sync.sh
